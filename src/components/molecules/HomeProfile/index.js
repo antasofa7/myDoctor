@@ -1,15 +1,27 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
-import React from 'react';
-import {DummyUser} from '../../../assets';
-import {colors, fonts} from '../../../utils';
+import React, {useEffect, useState} from 'react';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {ILPhotoProfileDefault} from '../../../assets';
+import {colors, fonts, getData} from '../../../utils';
 
 const HomeProfile = ({onPress}) => {
+  const [profile, setProfile] = useState({
+    avatar: ILPhotoProfileDefault,
+    fullName: '',
+    profession: '',
+  });
+  useEffect(() => {
+    getData('userData').then(res => {
+      console.log('user data => ', res);
+      res.avatar = {uri: res.avatar};
+      setProfile(res);
+    });
+  }, []);
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={DummyUser} style={styles.avatar} />
+      <Image source={profile.avatar} style={styles.avatar} />
       <View>
-        <Text style={styles.name}>Shayna Melinda</Text>
-        <Text style={styles.proffesion}>Product Designer</Text>
+        <Text style={styles.name}>{profile.fullName}</Text>
+        <Text style={styles.proffesion}>{profile.profession}</Text>
       </View>
     </TouchableOpacity>
   );
@@ -32,10 +44,12 @@ const styles = StyleSheet.create({
     fontFamily: fonts.primary.semiBold,
     fontSize: 16,
     color: colors.text.primary,
+    textTransform: 'capitalize',
   },
   proffesion: {
     fontFamily: fonts.primary.regular,
     fontSize: 12,
     color: colors.text.secondary,
+    textTransform: 'capitalize',
   },
 });

@@ -1,26 +1,85 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
-import React from 'react';
+import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
+import React, {useState} from 'react';
 import {Button, Header, Link, Spacer} from '../../components';
-import {IconAddPhoto, ILPhotoProfileDefault} from '../../assets';
-import {colors, fonts} from '../../utils';
+import {
+  IconAddPhoto,
+  IconRemovePhoto,
+  ILPhotoProfileDefault,
+} from '../../assets';
+import {colors, fonts, storeData} from '../../utils';
+import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
+import {showMessage} from 'react-native-flash-message';
+import {FIREBASE} from '../../config';
 
-const UploadPhoto = ({navigation}) => {
+const UploadPhoto = props => {
+  const {navigation, route} = props;
+  const {dataUser} = route.params;
+
+  const [hasPhoto, setHasPhoto] = useState(false);
+  const [photo, setPhoto] = useState(ILPhotoProfileDefault);
+  const [photoForDB, setPhotoForDB] = useState('');
+  const getImage = _ => {
+    // launchCamera({}, res => {
+    //   console.log('res => ', res);
+    //   const src = {uri: res.assets[0].uri};
+    //   setPhoto(src);
+    //   setHasPhoto(true);
+    // });
+    launchImageLibrary(
+      {includeBase64: true, quality: 0.5, maxWidth: 200, maxHeight: 200},
+      res => {
+        if (res.didCancel || res.errorCode) {
+          showMessage({
+            message: 'Oops! Sepertinya Anda tidak memilih foto.',
+            type: 'danger',
+            duration: 3000,
+            titleStyle: {fontFamily: fonts.primary.regular, fontSize: 14},
+          });
+        } else {
+          const dataImage = {uri: res.assets[0]};
+          console.log('getImage => ', dataImage.uri.type);
+          setPhotoForDB(
+            `data: ${dataImage.uri.type};base64, ${dataImage.uri.base64}`,
+          );
+          setPhoto(dataImage.uri);
+          setHasPhoto(true);
+        }
+      },
+    );
+  };
+
+  const uploadAndContinue = _ => {
+    FIREBASE.database()
+      .ref(`users/${dataUser.uid}/`)
+      .update({avatar: photoForDB});
+
+    dataUser.avatar = photoForDB;
+    storeData('userData', dataUser);
+
+    navigation.replace('MainApp');
+  };
+
   return (
     <View style={styles.page}>
       <Header title="Upload Photo" />
       <View style={styles.content}>
         <View style={styles.profile}>
-          <View style={styles.avatarWrapper}>
-            <Image source={ILPhotoProfileDefault} style={styles.avatar} />
-            <IconAddPhoto style={styles.addPhoto} />
-          </View>
-          <Text style={styles.name}>Shayna Melinda</Text>
-          <Text style={styles.profession}>Product Designer</Text>
+          <TouchableOpacity style={styles.avatarWrapper} onPress={getImage}>
+            <Image source={photo} style={styles.avatar} />
+            {!hasPhoto ? (
+              <IconAddPhoto style={styles.addPhoto} />
+            ) : (
+              <IconRemovePhoto style={styles.addPhoto} />
+            )}
+          </TouchableOpacity>
+          <Text style={styles.name}>{dataUser.fullName}</Text>
+          <Text style={styles.profession}>{dataUser.profession}</Text>
         </View>
         <View>
           <Button
             title="Upload and Continue"
-            onPress={() => navigation.replace('MainApp')}
+            onPress={uploadAndContinue}
+            disabled={!hasPhoto}
           />
           <Spacer height={30} />
           <Link

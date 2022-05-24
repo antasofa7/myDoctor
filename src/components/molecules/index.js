@@ -9,6 +9,7 @@ import ListHospital from './ListHospital';
 import BubbleChat from './BubbleChat';
 import InputChat from './InputChat';
 import Profile from './Profile';
+import Loading from './Loading';
 
 export {
   Header,
@@ -22,4 +23,5 @@ export {
   BubbleChat,
   InputChat,
   Profile,
+  Loading,
 };
