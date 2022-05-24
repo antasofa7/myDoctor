@@ -5,8 +5,15 @@ import {colors, fonts} from '../../../utils';
 import InputChat from './InputChat';
 
 const Input = props => {
-  const {label, type, value, onChangeText, secureTextEntry, keyboardType} =
-    props;
+  const {
+    label,
+    type,
+    value,
+    onChangeText,
+    secureTextEntry,
+    keyboardType,
+    disabled,
+  } = props;
 
   const [border, setBorder] = useState(colors.border);
 
@@ -28,6 +35,8 @@ const Input = props => {
         secureTextEntry={secureTextEntry}
         keyboardType={keyboardType}
         style={styles.input(border)}
+        editable={!disabled}
+        selectTextOnFocus={!disabled}
       />
     </View>
   );

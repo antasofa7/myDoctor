@@ -1,16 +1,29 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
+import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {DummyUser, IconRemovePhoto} from '../../../assets';
+import {IconRemovePhoto, ILPhotoProfileDefault} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
 const Profile = props => {
-  const {name, desc, isEdit} = props;
+  const {name, desc, avatar, isEdit, onPress} = props;
   return (
     <View style={styles.container}>
-      <View style={styles.avatarWrapper}>
-        <Image source={DummyUser} style={styles.avatar} />
-        {isEdit && <IconRemovePhoto style={styles.removePhoto} />}
-      </View>
+      {isEdit ? (
+        <TouchableOpacity style={styles.avatarWrapper} onPress={onPress}>
+          <Image
+            source={avatar !== undefined ? avatar : ILPhotoProfileDefault}
+            style={styles.avatar}
+          />
+          {isEdit && <IconRemovePhoto style={styles.removePhoto} />}
+        </TouchableOpacity>
+      ) : (
+        <View style={styles.avatarWrapper}>
+          <Image
+            source={avatar || ILPhotoProfileDefault}
+            style={styles.avatar}
+          />
+          {isEdit && <IconRemovePhoto style={styles.removePhoto} />}
+        </View>
+      )}
       {name && <Text style={styles.name}>{name}</Text>}
       {desc && <Text style={styles.profession}>{desc}</Text>}
     </View>
@@ -36,6 +49,7 @@ const styles = StyleSheet.create({
   avatar: {
     width: 110,
     height: 110,
+    borderRadius: 110 / 2,
   },
   removePhoto: {
     position: 'absolute',

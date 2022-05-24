@@ -9,16 +9,23 @@ const HomeProfile = ({onPress}) => {
     fullName: '',
     profession: '',
   });
+
   useEffect(() => {
     getData('userData').then(res => {
-      console.log('user data => ', res);
+      //   console.log('user data => ', res);
       res.avatar = {uri: res.avatar};
       setProfile(res);
     });
   }, []);
+
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={profile.avatar} style={styles.avatar} />
+      <Image
+        source={
+          profile.avatar !== undefined ? profile.avatar : ILPhotoProfileDefault
+        }
+        style={styles.avatar}
+      />
       <View>
         <Text style={styles.name}>{profile.fullName}</Text>
         <Text style={styles.proffesion}>{profile.profession}</Text>

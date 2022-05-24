@@ -17,6 +17,7 @@ import IconEditProfile from './ic_edit_profile.svg';
 import IconLanguage from './ic_language.svg';
 import IconRate from './ic_rate.svg';
 import IconHelp from './ic_help.svg';
+import IconLogout from './ic_logout.svg';
 
 export {
   IconBackDark,
@@ -38,4 +39,5 @@ export {
   IconLanguage,
   IconRate,
   IconHelp,
+  IconLogout,
 };

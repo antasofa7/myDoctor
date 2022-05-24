@@ -1,13 +1,32 @@
 import {StyleSheet, Text, View} from 'react-native';
 import React, {useEffect} from 'react';
 import {ILLogo} from '../../assets';
-import {colors, fonts} from '../../utils';
+import {colors, fonts, getData} from '../../utils';
+import {FIREBASE} from '../../config';
 
-export default function Splash({navigation}) {
+const Splash = ({navigation}) => {
   useEffect(() => {
-    setTimeout(() => {
-      navigation.replace('GetStarted');
-    }, 3000);
+    // getData('userData').then(res => {
+    //   console.log('user => ', res);
+    //   if (res) {
+    //     navigation.replace('MainApp');
+    //   } else {
+    //     navigation.replace('GetStarted');
+    //   }
+    // });
+    FIREBASE.auth().onAuthStateChanged(isLogedIn => {
+      if (isLogedIn) {
+        const user = FIREBASE.auth().currentUser;
+        console.log('user => ', user);
+        console.log('isLogedIn => ', isLogedIn);
+        setTimeout(() => {
+          navigation.replace('MainApp');
+        }, 3000);
+      } else {
+        console.log('isLogedIn => ', isLogedIn);
+        navigation.replace('GetStarted');
+      }
+    });
   }, [navigation]);
 
   return (
@@ -16,7 +35,7 @@ export default function Splash({navigation}) {
       <Text style={styles.title}>My Doctor</Text>
     </View>
   );
-}
+};
 
 const styles = StyleSheet.create({
   page: {
@@ -32,3 +51,5 @@ const styles = StyleSheet.create({
     color: colors.secondary,
   },
 });
+
+export default Splash;

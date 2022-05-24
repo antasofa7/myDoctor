@@ -1,9 +1,9 @@
-import {StyleSheet, View, ScrollView} from 'react-native';
 import React, {useState} from 'react';
-import {Button, Header, Input, Loading, Spacer} from '../../components';
-import {colors, fonts, getData, storeData} from '../../utils';
-import {FIREBASE} from '../../config';
+import {ScrollView, StyleSheet, View} from 'react-native';
 import {showMessage} from 'react-native-flash-message';
+import {Button, Header, Input, Loading, Spacer} from '../../components';
+import {FIREBASE} from '../../config';
+import {colors, fonts, storeData} from '../../utils';
 
 const Register = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -17,20 +17,20 @@ const Register = ({navigation}) => {
   const dataUser = {
     fullName: form.fullName,
     profession: form.profession,
-    emai: form.email,
+    email: form.email,
   };
 
   const onContinue = _ => {
     setLoading(true);
     FIREBASE.auth()
       .createUserWithEmailAndPassword(form.email, form.password)
-      .then(userCredential => {
+      .then(res => {
         // Signed in
         // https://firebase.com/users/uid
-        const user = userCredential.user;
+        const user = res.user;
         dataUser.uid = user.uid;
         FIREBASE.database().ref(`users/${user.uid}/`).set(dataUser);
-        console.log('register success:', userCredential);
+        console.log('register success:', res);
 
         storeData('userData', dataUser);
 
@@ -39,9 +39,9 @@ const Register = ({navigation}) => {
         navigation.navigate('UploadPhoto', {dataUser});
         // ...
       })
-      .catch(error => {
-        // var errorCode = error.code;
-        var errorMessage = error.message;
+      .catch(err => {
+        // var errorCode = err.code;
+        const errorMessage = err.message;
         showMessage({
           message: errorMessage,
           type: 'danger',
@@ -88,10 +88,12 @@ const Register = ({navigation}) => {
             <Spacer height={40} />
             <Button
               title="Continue"
-              onPress={
-                onContinue
-                // () => navigation.navigate('UploadPhoto')
+              disabled={
+                form.fullName && form.profession && form.email && form.password
+                  ? false
+                  : true
               }
+              onPress={onContinue}
             />
           </View>
         </ScrollView>

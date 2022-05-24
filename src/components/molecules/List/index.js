@@ -4,6 +4,7 @@ import {
   IconEditProfile,
   IconHelp,
   IconLanguage,
+  IconLogout,
   IconNext,
   IconRate,
 } from '../../../assets';
@@ -21,6 +22,8 @@ const List = props => {
         return <IconRate />;
       case 'help':
         return <IconHelp />;
+      case 'logout':
+        return <IconLogout />;
       default:
         break;
     }
@@ -34,9 +37,11 @@ const List = props => {
       )}
       <View style={styles.text}>
         <Text style={styles.name}>{name}</Text>
-        <Text style={styles.desc} numberOfLines={1}>
-          {desc}
-        </Text>
+        {desc && (
+          <Text style={styles.desc} numberOfLines={1}>
+            {desc}
+          </Text>
+        )}
       </View>
       {type === 'next' && <IconNext style={styles.next} />}
     </TouchableOpacity>
