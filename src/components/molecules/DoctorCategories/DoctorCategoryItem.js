@@ -2,6 +2,7 @@ import {StyleSheet, Text, TouchableOpacity} from 'react-native';
 import React from 'react';
 import {
   IconCatDocAnak,
+  IconCatDocGigi,
   IconCatDocObat,
   IconCatDocPsikiater,
   IconCatDocUmum,
@@ -20,6 +21,8 @@ const DoctorCategoryItem = props => {
         return <IconCatDocObat />;
       case 'dokter anak':
         return <IconCatDocAnak />;
+      case 'dokter gigi':
+        return <IconCatDocGigi />;
       default:
         return <IconCatDocUmum />;
     }

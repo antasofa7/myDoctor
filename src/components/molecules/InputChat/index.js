@@ -2,15 +2,23 @@ import React from 'react';
 import {StyleSheet, View} from 'react-native';
 import {Button, Input} from '../../atoms';
 
-const InputChat = () => {
+const InputChat = props => {
+  const {doctor, value, onChangeText, onPress} = props;
+
   return (
     <View style={styles.container}>
       <Input
         style={styles.input}
         type="chat"
-        placeholder="Tulis pesan untuk Nairobi"
+        doctor={doctor}
+        value={value}
+        onChangeText={onChangeText}
       />
-      <Button type="btn-icon" disabled />
+      <Button
+        type="btn-icon-send"
+        disabled={value === '' ? true : false}
+        onPress={onPress}
+      />
     </View>
   );
 };

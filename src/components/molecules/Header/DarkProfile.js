@@ -5,7 +5,8 @@ import {Button} from '../../atoms';
 import {DummyDoctor5} from '../../../assets';
 import {useNavigation} from '@react-navigation/native';
 
-const DarkProfile = () => {
+const DarkProfile = props => {
+  const {title, category, photo} = props;
   const navigation = useNavigation();
   return (
     <View style={styles.container}>
@@ -15,10 +16,10 @@ const DarkProfile = () => {
         onPress={() => navigation.goBack()}
       />
       <View style={styles.text}>
-        <Text style={styles.name}>Nairobi Putri Hayza</Text>
-        <Text style={styles.category}>Dokter Anak</Text>
+        <Text style={styles.name}>{title}</Text>
+        <Text style={styles.category}>{category}</Text>
       </View>
-      <Image source={DummyDoctor5} style={styles.profile} />
+      <Image source={{uri: photo}} style={styles.profile} />
     </View>
   );
 };
@@ -43,12 +44,14 @@ const styles = StyleSheet.create({
     fontFamily: fonts.primary.semiBold,
     fontSize: 20,
     color: colors.white,
+    textTransform: 'capitalize',
   },
   category: {
     fontFamily: fonts.primary.regular,
     fontSize: 14,
     color: colors.text.secondary,
     marginTop: 2,
+    textTransform: 'capitalize',
   },
   profile: {
     width: 46,

@@ -1,20 +1,20 @@
-import {StyleSheet, Text, View, ScrollView} from 'react-native';
-import React, {useState} from 'react';
+import React from 'react';
+import {ScrollView, StyleSheet, Text, View} from 'react-native';
+import {useDispatch} from 'react-redux';
 import {ILLogo} from '../../assets';
-import {Button, Input, Link, Loading, Spacer} from '../../components';
-import {colors, fonts, storeData, useForm} from '../../utils';
+import {Button, Input, Link, Spacer} from '../../components';
 import {FIREBASE} from '../../config';
-import {showMessage} from 'react-native-flash-message';
+import {colors, fonts, showError, storeData, useForm} from '../../utils';
 
 const Login = ({navigation}) => {
-  const [loading, setLoading] = useState(false);
   const [form, setForm] = useForm({
     email: '',
     password: '',
   });
+  const dispatch = useDispatch();
 
   const login = _ => {
-    setLoading(true);
+    dispatch({type: 'SET_LOADING', value: true});
     FIREBASE.auth()
       .signInWithEmailAndPassword(form.email, form.password)
       .then(res => {
@@ -30,18 +30,13 @@ const Login = ({navigation}) => {
               navigation.replace('MainApp');
             }
           });
-        setLoading(false);
+        dispatch({type: 'SET_LOADING', value: false});
       })
       .catch(err => {
+        dispatch({type: 'SET_LOADING', value: false});
         const errorMessage = err.message;
-        showMessage({
-          message: errorMessage,
-          type: 'danger',
-          duration: 3000,
-          titleStyle: {fontFamily: fonts.primary.regular, fontSize: 14},
-        });
+        showError(errorMessage);
         console.log('error => ', err.message);
-        setLoading(false);
       });
   };
 
@@ -81,7 +76,6 @@ const Login = ({navigation}) => {
           />
         </ScrollView>
       </View>
-      {loading && <Loading />}
     </>
   );
 };

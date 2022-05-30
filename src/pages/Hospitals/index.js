@@ -1,15 +1,28 @@
-import {StyleSheet, Text, View, ImageBackground} from 'react-native';
-import React from 'react';
-import {
-  DummyHospital1,
-  DummyHospital2,
-  DummyHospital3,
-  ILCoverHospital,
-} from '../../assets';
-import {colors, fonts} from '../../utils';
+import React, {useEffect, useState} from 'react';
+import {ImageBackground, StyleSheet, Text, View} from 'react-native';
+import {ILCoverHospital} from '../../assets';
 import {ListHospital} from '../../components';
+import {FIREBASE} from '../../config';
+import {colors, fonts} from '../../utils';
 
 const Hospitals = () => {
+  const [hospitals, setHospitals] = useState([]);
+
+  useEffect(() => {
+    FIREBASE.database()
+      .ref('hospitals/')
+      .once('value')
+      .then(res => {
+        console.log('hospitals data => ', res.val());
+        if (res.val()) {
+          const data = res.val();
+          const filterData = data.filter(el => el !== null);
+          console.log('data filter hospital => ', filterData);
+          setHospitals(filterData);
+        }
+      });
+  }, []);
+
   return (
     <View style={styles.page}>
       <ImageBackground
@@ -20,24 +33,17 @@ const Hospitals = () => {
         <Text style={styles.available}>3 tersedia</Text>
       </ImageBackground>
       <View style={styles.content}>
-        <ListHospital
-          thumbnail={DummyHospital1}
-          category="Rumah Sakit"
-          name="Citra Bunga Merdeka"
-          address="Jln. Surya Sejahtera 20"
-        />
-        <ListHospital
-          thumbnail={DummyHospital2}
-          category="Rumah Sakit Anak"
-          name="Happy Family & Kids"
-          address="Jln. Surya Sejahtera 20"
-        />
-        <ListHospital
-          thumbnail={DummyHospital3}
-          category="Rumah Sakit Jiwa"
-          name="Tingkatan Paling Atas"
-          address="Jln. Surya Sejahtera 20"
-        />
+        {hospitals.map(item => {
+          return (
+            <ListHospital
+              key={item.id}
+              imageUrl={item.image}
+              category={item.category}
+              name={item.name}
+              address={item.address}
+            />
+          );
+        })}
       </View>
     </View>
   );

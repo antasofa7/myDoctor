@@ -4,10 +4,10 @@ import {colors, fonts} from '../../../utils';
 import Ratings from '../../atoms/Ratings';
 
 const RatedDoctorItem = props => {
-  const {name, desc, avatar, onPress} = props;
+  const {name, desc, photo, onPress} = props;
   return (
     <TouchableOpacity style={styles.container} onPress={onPress}>
-      <Image source={avatar} style={styles.avatar} />
+      <Image source={{uri: photo}} style={styles.avatar} />
       <View style={styles.profile}>
         <Text style={styles.name}>{name}</Text>
         <Text style={styles.category}>{desc}</Text>
@@ -44,5 +44,6 @@ const styles = StyleSheet.create({
     fontSize: 12,
     color: colors.text.secondary,
     marginTop: 2,
+    textTransform: 'capitalize',
   },
 });

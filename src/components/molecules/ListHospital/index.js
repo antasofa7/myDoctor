@@ -3,10 +3,10 @@ import React from 'react';
 import {colors, fonts} from '../../../utils';
 
 const ListHospital = props => {
-  const {thumbnail, category, name, address} = props;
+  const {imageUrl, category, name, address} = props;
   return (
     <View style={styles.container}>
-      <Image source={thumbnail} style={styles.photo} />
+      <Image source={{uri: imageUrl}} style={styles.photo} />
       <View style={styles.text}>
         <Text style={styles.name}>{category}</Text>
         <Text style={styles.name}>{name}</Text>

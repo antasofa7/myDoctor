@@ -11,7 +11,7 @@ import {
 import {colors, fonts} from '../../../utils';
 
 const List = props => {
-  const {profile, name, desc, type, onPress, icon} = props;
+  const {photo, name, desc, type, onPress, icon} = props;
   const Icon = () => {
     switch (icon) {
       case 'edit-profile':
@@ -33,7 +33,7 @@ const List = props => {
       {icon ? (
         <Icon style={styles.icon} />
       ) : (
-        <Image source={profile} style={styles.profile} />
+        <Image source={{uri: photo}} style={styles.photo} />
       )}
       <View style={styles.text}>
         <Text style={styles.name}>{name}</Text>
@@ -58,7 +58,7 @@ const styles = StyleSheet.create({
     borderBottomWidth: 1,
     borderBottomColor: colors.border,
   },
-  profile: {
+  photo: {
     width: 46,
     height: 46,
     borderRadius: 46 / 2,
@@ -71,11 +71,13 @@ const styles = StyleSheet.create({
     fontFamily: fonts.primary.semiBold,
     fontSize: 16,
     color: colors.text.primary,
+    textTransform: 'capitalize',
   },
   desc: {
     fontFamily: fonts.primary.regular,
     fontSize: 12,
     color: colors.text.secondary,
     marginTop: 2,
+    textTransform: 'capitalize',
   },
 });

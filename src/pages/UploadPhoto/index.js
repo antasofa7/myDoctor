@@ -1,15 +1,14 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React, {useState} from 'react';
-import {Button, Header, Link, Spacer} from '../../components';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {launchImageLibrary} from 'react-native-image-picker';
 import {
   IconAddPhoto,
   IconRemovePhoto,
   ILPhotoProfileDefault,
 } from '../../assets';
-import {colors, fonts, storeData} from '../../utils';
-import {launchCamera, launchImageLibrary} from 'react-native-image-picker';
-import {showMessage} from 'react-native-flash-message';
+import {Button, Header, Link, Spacer} from '../../components';
 import {FIREBASE} from '../../config';
+import {colors, fonts, showError, storeData} from '../../utils';
 
 const UploadPhoto = props => {
   const {navigation, route} = props;
@@ -29,12 +28,7 @@ const UploadPhoto = props => {
       {includeBase64: true, quality: 0.5, maxWidth: 200, maxHeight: 200},
       res => {
         if (res.didCancel || res.errorCode) {
-          showMessage({
-            message: 'Oops! Sepertinya Anda tidak memilih foto.',
-            type: 'danger',
-            duration: 3000,
-            titleStyle: {fontFamily: fonts.primary.regular, fontSize: 14},
-          });
+          showError('Oops! Sepertinya Anda tidak memilih foto.');
         } else {
           const dataImage = {uri: res.assets[0]};
           console.log('getImage => ', dataImage.uri.type);

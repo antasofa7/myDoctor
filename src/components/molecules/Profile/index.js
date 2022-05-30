@@ -1,26 +1,20 @@
-import {StyleSheet, Text, View, Image, TouchableOpacity} from 'react-native';
 import React from 'react';
-import {IconRemovePhoto, ILPhotoProfileDefault} from '../../../assets';
+import {Image, StyleSheet, Text, TouchableOpacity, View} from 'react-native';
+import {IconRemovePhoto} from '../../../assets';
 import {colors, fonts} from '../../../utils';
 
 const Profile = props => {
-  const {name, desc, avatar, isEdit, onPress} = props;
+  const {name, desc, photo, isEdit, onPress} = props;
   return (
     <View style={styles.container}>
       {isEdit ? (
         <TouchableOpacity style={styles.avatarWrapper} onPress={onPress}>
-          <Image
-            source={avatar !== undefined ? avatar : ILPhotoProfileDefault}
-            style={styles.avatar}
-          />
+          <Image source={{uri: photo}} style={styles.photo} />
           {isEdit && <IconRemovePhoto style={styles.removePhoto} />}
         </TouchableOpacity>
       ) : (
         <View style={styles.avatarWrapper}>
-          <Image
-            source={avatar || ILPhotoProfileDefault}
-            style={styles.avatar}
-          />
+          <Image source={{uri: photo}} style={styles.photo} />
           {isEdit && <IconRemovePhoto style={styles.removePhoto} />}
         </View>
       )}
@@ -46,7 +40,7 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center',
   },
-  avatar: {
+  photo: {
     width: 110,
     height: 110,
     borderRadius: 110 / 2,
@@ -62,6 +56,7 @@ const styles = StyleSheet.create({
     color: colors.text.primary,
     textAlign: 'center',
     marginTop: 16,
+    textTransform: 'capitalize',
   },
   profession: {
     fontFamily: fonts.primary.regular,
@@ -69,5 +64,6 @@ const styles = StyleSheet.create({
     color: colors.text.secondary,
     textAlign: 'center',
     marginTop: 4,
+    textTransform: 'capitalize',
   },
 });

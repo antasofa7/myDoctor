@@ -2,15 +2,14 @@ import {StyleSheet, Text, View} from 'react-native';
 import React from 'react';
 import {colors, fonts} from '../../../utils';
 
-const IsMeBubble = _ => {
+const IsMeBubble = props => {
+  const {text, date} = props;
   return (
     <View style={styles.container}>
       <View style={styles.bubble}>
-        <Text style={styles.message}>
-          Ibu dokter, apakah memakan jeruk tiap hari itu buruk?
-        </Text>
+        <Text style={styles.message}>{text}</Text>
       </View>
-      <Text style={styles.time}>4.20 AM</Text>
+      <Text style={styles.time}>{date}</Text>
     </View>
   );
 };

@@ -4,21 +4,34 @@ import {Button, Header, Profile, Spacer} from '../../components';
 import ProfileDoctorItem from '../../components/molecules/ProfileDoctorItem';
 import {colors} from '../../utils';
 
-const DoctorProfile = () => {
+const DoctorProfile = props => {
+  const {navigation, route} = props;
+  const doctor = route.params;
+  console.log('doctor => ', doctor);
   return (
     <View style={styles.page}>
       <Header title="Profile" />
       <Spacer height={40} />
-      <Profile name="Nairobi Putri Hayza" desc="Dokter Anak" />
+      <Profile
+        name={doctor.data.fullName}
+        desc={doctor.data.profession}
+        photo={doctor.data.photo}
+      />
       <Spacer height={10} />
-      <ProfileDoctorItem label="Alumnus" value="Universitas Indonesia, 2020" />
+      <ProfileDoctorItem
+        label="Alumnus"
+        value={`${doctor.data.University}, 2020`}
+      />
       <ProfileDoctorItem
         label="Tempat Praktik"
-        value="Rumah Sakit Umum, Bandung"
+        value={doctor.data.hospital_address}
       />
-      <ProfileDoctorItem label="No. STR" value="0000116622081996" />
+      <ProfileDoctorItem label="No. STR" value={doctor.data.str_number} />
       <View style={styles.btn}>
-        <Button title="Start Consultation" />
+        <Button
+          title="Start Consultation"
+          onPress={() => navigation.navigate('Chatting', doctor)}
+        />
       </View>
     </View>
   );

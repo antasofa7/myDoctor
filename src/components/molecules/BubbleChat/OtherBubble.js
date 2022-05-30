@@ -1,19 +1,17 @@
-import {StyleSheet, Text, View, Image} from 'react-native';
 import React from 'react';
+import {Image, StyleSheet, Text, View} from 'react-native';
 import {colors, fonts} from '../../../utils';
-import {DummyDoctor5} from '../../../assets';
 
-const OtherBubble = _ => {
+const OtherBubble = props => {
+  const {text, date, photo} = props;
   return (
     <View style={styles.container}>
-      <Image source={DummyDoctor5} style={styles.avatar} />
+      <Image source={photo} style={styles.photo} />
       <View>
         <View style={styles.bubble}>
-          <Text style={styles.message}>
-            Ibu dokter, apakah memakan jeruk tiap hari itu buruk?
-          </Text>
+          <Text style={styles.message}>{text}</Text>
         </View>
-        <Text style={styles.time}>4.20 AM</Text>
+        <Text style={styles.time}>{date}</Text>
       </View>
     </View>
   );
@@ -27,7 +25,7 @@ const styles = StyleSheet.create({
     alignItems: 'flex-end',
     flexDirection: 'row',
   },
-  avatar: {
+  photo: {
     width: 30,
     height: 30,
     borderRadius: 30 / 2,

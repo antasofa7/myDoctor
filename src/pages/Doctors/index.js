@@ -1,5 +1,5 @@
-import {StyleSheet, Text, View, SafeAreaView, ScrollView} from 'react-native';
-import React, {useEffect, useState} from 'react';
+import React from 'react';
+import {SafeAreaView, ScrollView, StyleSheet, Text, View} from 'react-native';
 import {
   DoctorCategories,
   GoodNews,
@@ -20,7 +20,7 @@ const Doctors = ({navigation}) => {
             Mau konsultasi dengan siapa hari ini?
           </Text>
           <DoctorCategories navigation={navigation} />
-          <RatedDoctors />
+          <RatedDoctors navigation={navigation} />
           <GoodNews />
           <Spacer height={30} />
         </ScrollView>

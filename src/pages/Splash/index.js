@@ -14,19 +14,21 @@ const Splash = ({navigation}) => {
     //     navigation.replace('GetStarted');
     //   }
     // });
-    FIREBASE.auth().onAuthStateChanged(isLogedIn => {
-      if (isLogedIn) {
-        const user = FIREBASE.auth().currentUser;
-        console.log('user => ', user);
-        console.log('isLogedIn => ', isLogedIn);
-        setTimeout(() => {
+    const _unsubscribe = FIREBASE.auth().onAuthStateChanged(isLogedIn => {
+      setTimeout(() => {
+        if (isLogedIn) {
+          const user = FIREBASE.auth().currentUser;
+          console.log('user => ', user);
+          console.log('isLogedIn => ', isLogedIn);
           navigation.replace('MainApp');
-        }, 3000);
-      } else {
-        console.log('isLogedIn => ', isLogedIn);
-        navigation.replace('GetStarted');
-      }
+        } else {
+          console.log('isLogedIn => ', isLogedIn);
+          navigation.replace('GetStarted');
+        }
+      }, 3000);
     });
+
+    return _ => _unsubscribe();
   }, [navigation]);
 
   return (

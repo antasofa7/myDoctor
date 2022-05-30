@@ -1,11 +1,10 @@
-import React, {useState, useEffect, useCallback} from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {Button, Header, Input, Profile, Spacer} from '../../components';
-import {colors, fonts, getData, storeData} from '../../utils';
-import {FIREBASE} from '../../config';
-import {showMessage} from 'react-native-flash-message';
 import {launchImageLibrary} from 'react-native-image-picker';
 import {ILPhotoProfileDefault} from '../../assets';
+import {Button, Header, Input, Profile, Spacer} from '../../components';
+import {FIREBASE} from '../../config';
+import {colors, getData, showError, storeData} from '../../utils';
 
 const EditProfile = ({navigation}) => {
   const [profile, setProfile] = useState({
@@ -34,16 +33,11 @@ const EditProfile = ({navigation}) => {
   );
 
   const _editProfile = _ => {
-    const newPassword = password.password.toString();
+    const newPassword = password.toString();
     console.log('password => ', newPassword.length);
     if (newPassword.length > 0) {
       if (newPassword.length < 6) {
-        showMessage({
-          message: 'Password minimal 6 karakter!',
-          type: 'danger',
-          duration: 3000,
-          titleStyle: {fontFamily: fonts.primary.regular, fontSize: 14},
-        });
+        showError('Password minimal 6 karakter!');
       } else {
         _editPasswordOnly();
         _editProfileWithoutPassword();
@@ -67,12 +61,7 @@ const EditProfile = ({navigation}) => {
           })
           .catch(err => {
             const errorMessage = err.message;
-            showMessage({
-              message: errorMessage,
-              type: 'danger',
-              duration: 3000,
-              titleStyle: {fontFamily: fonts.primary.regular, fontSize: 14},
-            });
+            showError(errorMessage);
             console.log('error =>', errorMessage);
           });
       }
@@ -85,18 +74,13 @@ const EditProfile = ({navigation}) => {
     FIREBASE.database()
       .ref(`users/${dataUser.uid}/`)
       .update(dataUser)
-      .then(_ => {
+      .then(() => {
         console.log('success', dataUser);
         storeData('userData', dataUser);
       })
       .catch(err => {
         const errorMessage = err.message;
-        showMessage({
-          message: errorMessage,
-          type: 'danger',
-          duration: 3000,
-          titleStyle: {fontFamily: fonts.primary.regular, fontSize: 14},
-        });
+        showError(errorMessage);
         console.log('error => ', err.message);
       });
   };
@@ -106,12 +90,7 @@ const EditProfile = ({navigation}) => {
       {includeBase64: true, quality: 0.5, maxWidth: 200, maxHeight: 200},
       res => {
         if (res.didCancel || res.errorCode) {
-          showMessage({
-            message: 'Oops! Sepertinya Anda tidak memilih foto.',
-            type: 'danger',
-            duration: 3000,
-            titleStyle: {fontFamily: fonts.primary.regular, fontSize: 14},
-          });
+          showError('Oops! Sepertinya Anda tidak memilih foto.');
         } else {
           const dataImage = {uri: res.assets[0]};
           console.log('getImage => ', dataImage.uri.type);

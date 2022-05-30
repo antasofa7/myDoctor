@@ -1,9 +1,8 @@
 import React, {useState} from 'react';
 import {ScrollView, StyleSheet, View} from 'react-native';
-import {showMessage} from 'react-native-flash-message';
 import {Button, Header, Input, Loading, Spacer} from '../../components';
 import {FIREBASE} from '../../config';
-import {colors, fonts, storeData} from '../../utils';
+import {colors, showError, storeData} from '../../utils';
 
 const Register = ({navigation}) => {
   const [loading, setLoading] = useState(false);
@@ -40,14 +39,8 @@ const Register = ({navigation}) => {
         // ...
       })
       .catch(err => {
-        // var errorCode = err.code;
         const errorMessage = err.message;
-        showMessage({
-          message: errorMessage,
-          type: 'danger',
-          duration: 3000,
-          titleStyle: {fontFamily: fonts.primary.regular, fontSize: 14},
-        });
+        showError(errorMessage);
         console.log('error register: ', errorMessage);
         setLoading(false);
         // ..

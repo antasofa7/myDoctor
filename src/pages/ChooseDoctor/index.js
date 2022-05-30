@@ -1,26 +1,59 @@
-import React from 'react';
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
 import {DummyDoctor4} from '../../assets';
 import {Header, List} from '../../components';
+import {FIREBASE} from '../../config';
 import {colors} from '../../utils';
 
-const ChooseDoctor = ({navigation}) => {
+const ChooseDoctor = props => {
+  const {navigation, route} = props;
+  const item = route.params;
+  const [doctors, setDoctors] = useState([]);
+
+  useEffect(
+    _ => {
+      _getDoctorByCategory(item.category);
+    },
+    [_getDoctorByCategory, item],
+  );
+
+  const _getDoctorByCategory = useCallback(category => {
+    FIREBASE.database()
+      .ref('doctors/')
+      .orderByChild('category')
+      .equalTo(category)
+      .once('value')
+      .then(res => {
+        if (res.val()) {
+          const oldData = res.val();
+          const data = [];
+          Object.keys(oldData).map(key => {
+            data.push({
+              id: key,
+              data: oldData[key],
+            });
+          });
+          setDoctors(data);
+          console.log('doctors by category => ', res.val());
+        }
+      });
+  }, []);
+
   return (
     <View style={styles.page}>
-      <Header title="Pilih Dokter Anak" type="dark" />
-      <List
-        profile={DummyDoctor4}
-        name="Alexander Jannie"
-        desc="Wanita"
-        type="next"
-        onPress={() => navigation.navigate('Chatting')}
-      />
-      <List
-        profile={DummyDoctor4}
-        name="Alexander Jannie"
-        desc="Wanita"
-        type="next"
-      />
+      <Header title={`Pilih ${item.category}`} type="dark" />
+      {doctors.map(doctor => {
+        return (
+          <List
+            key={doctor.id}
+            photo={doctor.data.photo}
+            name={doctor.data.fullName}
+            desc={doctor.data.gender}
+            type="next"
+            onPress={() => navigation.navigate('DoctorProfile', doctor)}
+          />
+        );
+      })}
     </View>
   );
 };

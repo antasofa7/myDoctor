@@ -2,11 +2,12 @@ import React from 'react';
 import IsMeBubble from './IsMyBubble';
 import OtherBubble from './OtherBubble';
 
-const BubbleChat = ({isMe}) => {
+const BubbleChat = props => {
+  const {isMe, text, date, photo} = props;
   if (isMe) {
-    return <IsMeBubble />;
+    return <IsMeBubble text={text} date={date} />;
   }
-  return <OtherBubble />;
+  return <OtherBubble text={text} date={date} photo={photo} />;
 };
 
 export default BubbleChat;

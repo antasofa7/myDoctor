@@ -1,45 +1,75 @@
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import React, {useState} from 'react';
-import {colors, fonts} from '../../utils';
 import {List, Spacer} from '../../components';
-import {DummyDoctor4, DummyDoctor5, DummyDoctor6} from '../../assets';
+import {FIREBASE} from '../../config';
+import {colors, fonts, getData} from '../../utils';
 
 const Messages = ({navigation}) => {
-  // eslint-disable-next-line no-sparse-arrays
-  const [doctors] = useState([
-    {
-      id: 1,
-      profile: DummyDoctor4,
-      name: 'Alexander Jannie',
-      desc: 'Baik ibu, terima kasih banyak atas wakt...',
+  const [user, setUser] = useState({});
+  const [messages, setMessages] = useState([]);
+
+  const _getUserFromLocal = _ => {
+    getData('userData').then(res => {
+      if (res) {
+        setUser(res);
+      }
+    });
+  };
+
+  const _getMessages = useCallback(
+    _ => {
+      const urlMessage = `messages/${user.uid}`;
+      const rootDb = FIREBASE.database();
+      const messageDb = rootDb.ref(urlMessage);
+
+      messageDb.on('value', async snapshot => {
+        if (snapshot.val()) {
+          const oldData = snapshot.val();
+          const data = [];
+          const promises = await Object.keys(oldData).map(async key => {
+            const urlDoctor = `doctors/${oldData[key].uidPartner}`;
+            const profileDoctor = await rootDb.ref(urlDoctor).once('value');
+            // console.log('doctors', profileDoctor.val());
+            data.push({
+              id: key,
+              profileDoctor: profileDoctor.val(),
+              ...oldData[key],
+            });
+          });
+
+          await Promise.all(promises);
+
+          // console.log('messages => ', data);
+          setMessages(data);
+        }
+      });
     },
-    {
-      id: 2,
-      profile: DummyDoctor5,
-      name: 'Nairobi Putri Hayza',
-      desc: 'Oh tentu saja tidak karena jeruk it...',
-    },
-    {
-      id: 3,
-      profile: DummyDoctor6,
-      name: 'John McParker Steve',
-      desc: 'Oke menurut pak dokter bagaimana unt...',
-    },
-    ,
-  ]);
+    [user.uid],
+  );
+
+  useEffect(() => {
+    _getUserFromLocal();
+    _getMessages();
+  }, [_getMessages]);
+
   return (
     <View style={styles.page}>
       <View style={styles.content}>
         <Spacer height={30} />
         <Text style={styles.title}>Messages</Text>
-        {doctors.map(doctor => {
+        {messages.map(item => {
+          const dataDoctor = {
+            id: item.profileDoctor.uid,
+            data: item.profileDoctor,
+          };
+
           return (
             <List
-              key={doctor.id}
-              profile={doctor.profile}
-              name={doctor.name}
-              desc={doctor.desc}
-              onPress={() => navigation.navigate('Chatting')}
+              key={item.id}
+              photo={item.profileDoctor.photo}
+              name={item.profileDoctor.fullName}
+              desc={item.lastContentChat}
+              onPress={() => navigation.navigate('Chatting', dataDoctor)}
             />
           );
         })}

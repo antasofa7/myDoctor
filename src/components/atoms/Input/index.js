@@ -13,6 +13,7 @@ const Input = props => {
     secureTextEntry,
     keyboardType,
     disabled,
+    doctor,
   } = props;
 
   const [border, setBorder] = useState(colors.border);
@@ -21,7 +22,9 @@ const Input = props => {
   const onBlurForm = _ => setBorder(colors.border);
 
   if (type === 'chat') {
-    return <InputChat />;
+    return (
+      <InputChat doctor={doctor} value={value} onChangeText={onChangeText} />
+    );
   }
 
   return (

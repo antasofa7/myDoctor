@@ -1,9 +1,8 @@
-import React, {useState, useEffect} from 'react';
+import React, {useEffect, useState} from 'react';
 import {StyleSheet, View} from 'react-native';
-import {showMessage} from 'react-native-flash-message';
 import {Header, List, Profile, Spacer} from '../../components';
 import {FIREBASE} from '../../config';
-import {colors, fonts, getData, removeData} from '../../utils';
+import {colors, getData, removeData, showError} from '../../utils';
 
 const UserProfile = ({navigation}) => {
   const [profile, setProfile] = useState({
@@ -29,12 +28,7 @@ const UserProfile = ({navigation}) => {
       })
       .catch(err => {
         const errorMessage = err.message;
-        showMessage({
-          message: errorMessage,
-          type: 'danger',
-          duration: 3000,
-          titleStyle: {fontFamily: fonts.primary.regular, fontSize: 14},
-        });
+        showError(errorMessage);
       });
   };
 
@@ -46,7 +40,7 @@ const UserProfile = ({navigation}) => {
         <Profile
           name={profile.fullName}
           desc={profile.profession}
-          avatar={profile.avatar}
+          photo={profile.avatar}
         />
       )}
       <Spacer height={30 - 16} />

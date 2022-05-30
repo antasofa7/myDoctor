@@ -1,33 +1,53 @@
+import React, {useCallback, useEffect, useState} from 'react';
 import {StyleSheet, Text, View} from 'react-native';
-import React from 'react';
-import RatedDoctorItem from './RatedDoctorItem';
+import {FIREBASE} from '../../../config';
 import {colors, fonts} from '../../../utils';
-import {useNavigation} from '@react-navigation/native';
-import {DummyDoctor1, DummyDoctor2, DummyDoctor3} from '../../../assets';
+import RatedDoctorItem from './RatedDoctorItem';
 
-const RatedDoctors = () => {
-  const navigation = useNavigation();
+const RatedDoctors = ({navigation}) => {
+  const [doctors, setDoctors] = useState([]);
+
+  useEffect(() => {
+    _getTopRatedDoctors();
+  }, [_getTopRatedDoctors]);
+
+  const _getTopRatedDoctors = useCallback(async _ => {
+    FIREBASE.database()
+      .ref('doctors/')
+      .orderByChild('rate')
+      .limitToLast(3)
+      .once('value')
+      .then(res => {
+        console.log('top rated doctors => ', res.val());
+        if (res.val()) {
+          const oldData = res.val();
+          const data = [];
+          Object.keys(oldData).map(key => {
+            data.push({
+              id: key,
+              data: oldData[key],
+            });
+          });
+          console.log('data parse => ', data);
+          setDoctors(data);
+        }
+      });
+  }, []);
+
   return (
     <View style={styles.container}>
       <Text style={styles.title}>Top Rated Doctors</Text>
-      <RatedDoctorItem
-        name="Alexa Rachel"
-        desc="Pediatrician"
-        avatar={DummyDoctor1}
-        onPress={() => navigation.navigate('DoctorProfile')}
-      />
-      <RatedDoctorItem
-        name="Sunny Frank"
-        desc="Dentist"
-        avatar={DummyDoctor2}
-        onPress={() => navigation.navigate('DoctorProfile')}
-      />
-      <RatedDoctorItem
-        name="Poe Minn"
-        desc="Podiatrist"
-        avatar={DummyDoctor3}
-        onPress={() => navigation.navigate('DoctorProfile')}
-      />
+      {doctors.map(doctor => {
+        return (
+          <RatedDoctorItem
+            key={doctor.id}
+            name={doctor.data.fullName}
+            desc={doctor.data.profession}
+            photo={doctor.data.photo}
+            onPress={() => navigation.navigate('DoctorProfile', doctor)}
+          />
+        );
+      })}
     </View>
   );
 };

@@ -2,9 +2,15 @@ import React from 'react';
 import {StyleSheet, TextInput} from 'react-native';
 import {colors, fonts} from '../../../utils';
 
-const InputChat = () => {
+const InputChat = props => {
+  const {doctor, value, onChangeText} = props;
   return (
-    <TextInput style={styles.input} placeholder="Tulis pesan untuk Nairobi" />
+    <TextInput
+      style={styles.input}
+      value={value}
+      onChangeText={onChangeText}
+      placeholder={`Tulis pesan untuk ${doctor}`}
+    />
   );
 };
 

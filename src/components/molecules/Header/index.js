@@ -6,10 +6,10 @@ import {Button, Spacer} from '../../atoms';
 import DarkProfile from './DarkProfile';
 
 const Header = props => {
-  const {title, type} = props;
+  const {title, category, photo, type} = props;
   const navigation = useNavigation();
   if (type === 'dark-profile') {
-    return <DarkProfile />;
+    return <DarkProfile title={title} category={category} photo={photo} />;
   }
   return (
     <View style={styles.container(type)}>
@@ -40,6 +40,7 @@ const styles = StyleSheet.create({
   title: type => ({
     flex: 1,
     textAlign: 'center',
+    textTransform: 'capitalize',
     fontFamily: fonts.primary.semiBold,
     fontSize: 20,
     color: type === 'dark' ? colors.white : colors.text.primary,

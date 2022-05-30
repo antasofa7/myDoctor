@@ -6,10 +6,11 @@ import IconDoctor from './ic_doctor.svg';
 import IconDoctorActive from './ic_doctor_active.svg';
 import IconMessage from './ic_message';
 import IconHospital from './ic_hospital';
-import IconCatDocUmum from './ic_cat_dokter_umum_1.svg';
-import IconCatDocPsikiater from './ic_cat_dokter_umum_2.svg';
-import IconCatDocObat from './ic_cat_dokter_umum_3.svg';
-import IconCatDocAnak from './ic_cat_dokter_umum_4.svg';
+import IconCatDocUmum from './ic_cat_dokter_1.svg';
+import IconCatDocPsikiater from './ic_cat_dokter_2.svg';
+import IconCatDocObat from './ic_cat_dokter_3.svg';
+import IconCatDocAnak from './ic_cat_dokter_4.svg';
+import IconCatDocGigi from './ic_cat_dokter_5.svg';
 import IconStar from './ic_star.svg';
 import IconNext from './ic_next.svg';
 import IconSend from './ic_send';
@@ -32,6 +33,7 @@ export {
   IconCatDocPsikiater,
   IconCatDocObat,
   IconCatDocAnak,
+  IconCatDocGigi,
   IconStar,
   IconNext,
   IconSend,
